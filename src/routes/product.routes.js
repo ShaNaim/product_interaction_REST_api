@@ -10,6 +10,6 @@ productRouter.get("/:id", productController.getProductById); // get specific Pro
 
 productRouter.put("/:id", productController.updateProduct); // update product
 
-productRouter.delete("/:id", productController.productTest); // delete product
+productRouter.delete("/:id", productController.deleteProduct); // delete product
 
 module.exports = productRouter;
