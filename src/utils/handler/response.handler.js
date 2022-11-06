@@ -8,7 +8,7 @@ function handleSuccessResponse(payload) {
 
 function handleErrorResponse(payload) {
 	return {
-		success: true,
+		success: false,
 		error: payload,
 		data: null,
 	};

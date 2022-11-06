@@ -1,70 +1,119 @@
 const _ = require("lodash");
 
-function validateProductInputTypes(product) {
-	try {
-		let erorList = [];
-		if (!_.isString(product.name)) erorList.push(generateError("Product Name", "String"));
+// function validateProductInputTypes(product) {
+// 	try {
+// 		let erorList = [];
+// 		if (!_.isString(product.name))
+// 			erorList.push(generateErrorMessage("name", "Product Name", "String"));
 
-		if (!_.isNumber(product.price)) erorList.push(generateError("Product Price", "Number"));
+// 		if (!_.isNumber(product.price)) erorList.push(generateErrorMessage("Product Price", "Number"));
+// 		///////////
+// 		if (!_.isNumber(product.cost)) erorList.push(generateErrorMessage("Product Cost", "Number"));
 
-		if (!_.isNumber(product.cost)) erorList.push(generateError("Product Cost", "Number"));
+// 		if (product.description)
+// 			if (!_.isString(product.description))
+// 				erorList.push(generateErrorMessage("Product Description", "String"));
+// 		if (product.unit) {
+// 			if (!_.isString(product.unit.type))
+// 				erorList.push(generateErrorMessage("Product Unit Type", "String"));
+// 			if (!_.isNumber(product.unit.value))
+// 				erorList.push(generateErrorMessage("Product Unit Value", "Number"));
+// 		}
 
-		if (product.description)
-			if (!_.isString(product.description))
-				erorList.push(generateError("Product Description", "String"));
-		if (product.unit) {
-			if (!_.isString(product.unit.type))
-				erorList.push(generateError("Product Unit Type", "String"));
-			if (!_.isNumber(product.unit.value))
-				erorList.push(generateError("Product Unit Value", "Number"));
-		}
-
-		return erorList;
-	} catch (error) {
-		console.log("VALIDATOR", error);
-	}
-}
+// 		return erorList;
+// 	} catch (error) {
+// 		console.log("VALIDATOR", error);
+// 	}
+// }
 
 function validatePoductInputRequiements(product) {
-	console.log("HERE");
-	if (_.isEmpty(product)) return false;
-	console.log("HERE 1");
+	try {
+		let errorList = [];
 
-	if (!("productName" in product)) return false;
-	console.log("HERE 2");
+		if (_.isEmpty(product)) {
+			return errorList.push({
+				identifier: "request body",
+				message: `Empty Request`,
+			});
+		}
 
-	if (_.isEmpty(product.productName)) return false;
-	console.log("HERE 3");
+		if (!("productName" in product)) {
+			errorList.push(generateRequiredErrorMessage("name"));
+		} else {
+			if (_.isEmpty(product.productName)) errorList.push(generateRequiredErrorMessage("name"));
 
-	if (!("productPrice" in product)) return false;
-	console.log("HERE 4");
+			if (!_.isString(product.productName))
+				errorList.push(generateErrorMessage("name", "Product Name", "String"));
+		}
 
-	// if (_.isEmpty(product.productPrice)) return false;
-	console.log("HERE 5");
+		if (!("shopId" in product)) {
+			errorList.push(generateRequiredErrorMessage("shop_id"));
+		} else {
+			if (_.isEmpty(product.productName)) errorList.push(generateRequiredErrorMessage("shop_id"));
 
-	if (!("productCost" in product)) return false;
-	console.log("HERE 6");
+			if (!_.isString(product.productName))
+				errorList.push(generateErrorMessage("shop_id", "Shop ID", ""));
+		}
 
-	// if (_.isEmpty(product.productCost)) return false;
-	console.log("HERE 7");
+		if ("productSlug" in product) {
+			if (_.isEmpty(product.productName)) errorList.push(generateRequiredErrorMessage("slug"));
 
-	if ("productImages" in product) {
-		if (!_.isArray(product.productImages)) return false;
-		console.log("HERE 8");
+			if (!_.isString(product.productName))
+				errorList.push(generateErrorMessage("slug", "Product Slug", "String"));
+		}
+
+		if (!("productPrice" in product)) errorList.push(generateRequiredErrorMessage("price"));
+		else {
+			if (!_.isNumber(Number(product.productPrice)))
+				errorList.push(generateErrorMessage("price", "Product Price", "Number"));
+		}
+
+		if (!("productCost" in product)) errorList.push(generateRequiredErrorMessage("cost"));
+		else {
+			if (!_.isNumber(Number(product.productCost)))
+				errorList.push(generateErrorMessage("price", "Product Price", "Number"));
+		}
+
+		if ("description" in product) {
+			if (!_.isString(product.description))
+				errorList.push(generateErrorMessage("description", "Product Description", "String"));
+		}
+
+		if ("productImages" in product) {
+			if (!_.isArray(product.productImages))
+				errorList.push(generateErrorMessage("images", "Product Images", "Array"));
+		}
+
+		if ("productUnit" in product) {
+			if (!_.isString(product.productUnit))
+				errorList.push(generateErrorMessage("unit", "Product Unit", "String"));
+		}
+
+		if ("productUnitValue" in product) {
+			if (!_.isNumber(Number(product.productUnitValue)))
+				errorList.push(generateErrorMessage("unit_value", "Product Unit Value", "Number"));
+		}
+
+		return errorList;
+	} catch (error) {
+		throw new Error(error);
 	}
-
-	console.log(product);
-	return true;
 }
 
-function generateError(identifier, type) {
+function generateErrorMessage(identifier, message, type) {
 	return {
-		code: "wrong input",
-		message: `Wrong Input Provided for ${identifier} , Must be of type ${type}`,
+		identifier: identifier,
+		message: `Wrong Input Provided for ${message} , Must be of type ${type}`,
+	};
+}
+
+function generateRequiredErrorMessage(identifier) {
+	return {
+		identifier: identifier,
+		message: `Product ${identifier} Must be Provided`,
 	};
 }
 
 module.exports = {
 	validatePoductInputRequiements,
-	validateProductInputTypes,
 };

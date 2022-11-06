@@ -12,13 +12,31 @@ module.exports.createProduct = async (product) => {
 	}
 };
 
-module.exports.updateProduct = async (product) => {
-	console.log("Update Product :", product.id);
+module.exports.updateProduct = async (id, product) => {
 	try {
+		console.log("In UPDATE", id);
 		const updatedProduct = await Product.findByIdAndUpdate(
-			product.id,
+			id,
 			{
-				$set: product.body,
+				$set: product,
+			},
+			{ new: true }
+		);
+		console.log(updatedProduct);
+		if (updatedProduct) return updatedProduct;
+		else throw Error("Failed To Update Product");
+	} catch (err) {
+		console.log("Update Product :", err);
+		throw Error(err);
+	}
+};
+
+module.exports.updateProductWithSlug = async (slug, product) => {
+	try {
+		const updatedProduct = await Product.findOneAndUpdate(
+			{ slug },
+			{
+				$set: product,
 			},
 			{ new: true }
 		);
@@ -42,7 +60,33 @@ module.exports.getbyId = async (id) => {
 	}
 };
 
-module.exports.deleteProduct = async (id) => {
+module.exports.getbySlug = async (slug) => {
+	try {
+		console.log(slug);
+		const product = await Product.findOne({ slug });
+		if (product) return product;
+		else throw Error("Failed To Get Product");
+	} catch (err) {
+		console.log("Create Product :", err);
+		throw Error(err);
+	}
+};
+
+module.exports.checkSlugExists = async (slug) => {
+	try {
+		const product = await Product.find({ slug });
+		if (product.length === 0) {
+			console.log("checkSlugExists ::", product);
+			return false;
+		}
+		return true;
+	} catch (err) {
+		console.log("Create Product :", err);
+		throw Error(err);
+	}
+};
+
+module.exports.deleteProductbyId = async (id) => {
 	try {
 		const deletedProduct = await Product.findByIdAndDelete(id);
 		if (deletedProduct) return deletedProduct;
@@ -53,9 +97,20 @@ module.exports.deleteProduct = async (id) => {
 	}
 };
 
+module.exports.deleteProductbySlug = async (slug) => {
+	try {
+		const deletedProduct = await Product.findOneAndDelete({ slug });
+		if (deletedProduct) return deletedProduct;
+		else throw Error("Failed To Delete Product");
+	} catch (err) {
+		console.log("Delete Product :", err);
+		throw Error(err);
+	}
+};
+
 module.exports.getAllProducts = async () => {
 	try {
-		const products = await Product.find().select("-productUrl").sort({ createdAt: -1 });
+		const products = await Product.find().sort({ createdAt: -1 });
 		if (products) return products;
 		else throw Error("Failed to Add product");
 	} catch (error) {
