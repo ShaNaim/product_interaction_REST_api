@@ -1,4 +1,5 @@
 const { checkSlugExists } = require("../../database/dal/product.dal");
+const _ = require("lodash");
 function toPoductInput(product) {
 	const productInput = { unit: {} };
 
@@ -14,7 +15,7 @@ function toPoductInput(product) {
 		if (!checkSlugExists(product.productSlug))
 			productInput.slug = generateSlug(product.productName);
 		else productInput.slug = product.productSlug;
-	} else productInput.slug = product.productSlug;
+	} else productInput.slug = generateSlug(product.productName);
 
 	if ("description" in product) productInput.description = product.description;
 	if ("productUnit" in product) productInput.unit.type = product.productUnit;
@@ -39,6 +40,7 @@ function toProductOutput(product) {
 }
 
 function generateSlug(payload) {
+	console.log("GENERATE SLUG", payload);
 	let slug = `${_.kebabCase(payload)}-${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(
 		1000 + Math.random() * 9000
 	)}`;

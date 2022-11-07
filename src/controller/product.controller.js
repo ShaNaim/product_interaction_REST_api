@@ -21,6 +21,7 @@ module.exports.createNewProduct = async (req, res) => {
 			return res.status(400).json(responseHandler.handleErrorResponse(inputsValidateError));
 
 		const product = productMaper.toPoductInput(req.body);
+		console.log("CREATE PRODUCT ::", product);
 		const newProduct = await Product.createProduct(product);
 		console.log(newProduct);
 		if (!newProduct)

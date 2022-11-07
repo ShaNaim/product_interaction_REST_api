@@ -37,8 +37,11 @@ if (nodeEnv === "production") {
 } else {
 	dbURI = String(process.env.DB_TEST_URL);
 }
+
 mongoose
-	.connect(dbURI)
+	.connect(
+		"mongodb+srv://mashfiq_rayhan:openmongodb@cluster0.391da62.mongodb.net/testApiTracy?retryWrites=true&w=majority"
+	)
 	.then((result) => app.listen(PORT, console.log(`Server Started on ${PORT}`)))
 	.catch((err) => {
 		console.log(err);
@@ -52,4 +55,5 @@ app.get("/", (req, res) => {
 		data: "OK",
 	});
 });
+
 //404
