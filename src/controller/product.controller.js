@@ -87,7 +87,8 @@ module.exports.getAllProduct = async (req, res) => {
 		const productList = await Product.getAllProducts();
 		if (!productList)
 			return res.status(500).json(responseHandler.handleErrorResponse("Something Went Wrong"));
-		return res.status(200).json(responseHandler.handleSuccessResponse(productList));
+		const formatedPoduct = productList.map((product) => productMaper.toProductOutput(product));
+		return res.status(200).json(responseHandler.handleSuccessResponse(formatedPoduct));
 	} catch (error) {
 		console.log(error);
 		res.status(500).json(responseHandler.handleErrorResponse(error));

@@ -48,11 +48,26 @@ mongoose
 		process.exit(1);
 	});
 app.use("/api/v1", router);
+
 app.get("/", (req, res) => {
 	res.status(200).json({
 		error: false,
 		success: true,
-		data: "OK",
+		data: {
+			message: "API End Points are available at => domain.com/api/v1/product",
+			info: {
+				post_request_example: {
+					productName: "test_product",
+					productPrice: 30,
+					productCost: 20,
+					description: "Test Product",
+					productImages: ["image1", "image2"],
+					productUnit: "kg",
+					productUnitValue: 1000,
+					shopId: "3",
+				},
+			},
+		},
 	});
 });
 

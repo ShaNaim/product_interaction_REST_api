@@ -29,6 +29,7 @@ function toProductOutput(product) {
 	productOuput.productId = product._id;
 	productOuput.productName = product.name;
 	productOuput.productSlug = product.slug;
+	productOuput.description = product.description;
 	productOuput.productPrice = product.price;
 	productOuput.productCost = product.cost;
 	productOuput.productImages = product.images;
